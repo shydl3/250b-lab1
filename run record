@@ -1,0 +1,63 @@
+./obj/traverse ./bfile_24_64_test.dat 64 ./qfile_24_test.dat 32
+
+
+rog@ROG-Strix-G614JV:~/Desktop/lab1 my code$ ./obj/traverse ./bfile_24_64_test.dat 64 ./qfile_24_test.dat 32
+Done inserting all data. Elapsed 61.94s
+Finished reading the query file. 4194304 requests.
+Answer_sum: 2267827185863498
+Done querying. Elapsed 331.959170s
+
+
+rog@ROG-Strix-G614JV:~/Desktop/lab1 source code$ ./obj/traverse ./bfile_24_64_test.dat 64 ./qfile_24_test.dat 32
+Done inserting all data. Elapsed 127.30s
+Finished reading the query file. 4194304 requests.
+Answer_sum: 2186465661999360
+Done querying. Elapsed 1107.229823s
+
+
+rog@ROG-Strix-G614JV:~/Desktop/test code$ ./obj/traverse ./bfile_24_64_test.dat 64 ./qfile_24_test.dat 32
+Done inserting all data. Elapsed 12.66s
+Finished reading the query file. 4194304 requests.
+Answer_sum: 2193638013827584
+Done querying. Elapsed 573.757347s
+
+
+rog@ROG-Strix-G614JV:~/Desktop/test code$ ./obj/traverse ./bfile_24_64_test.dat 64 ./qfile_24_test.dat 32
+Done inserting all data. Elapsed 36.49s
+Finished reading the query file. 4194304 requests.
+Results do not match the golden answer from std::multimap! 68600302313472 != 68380696641024
+Results do not match the golden answer from std::multimap! 68526751071488 != 68307145164544
+Results do not match the golden answer from std::multimap! 68544699040000 != 68321289006848
+Results do not match the golden answer from std::multimap! 68539009376512 != 68307199575296
+Results do not match the golden answer from std::multimap! 68561108394496 != 68344278819072
+Results do not match the golden answer from std::multimap! 68531056728064 != 68307497500928
+Results do not match the golden answer from std::multimap! 68543703374080 != 68311744547072
+Results do not match the golden answer from std::multimap! 68525141070336 != 68304366219008
+Results do not match the golden answer from std::multimap! 68559058312448 != 68346575928576
+Results do not match the golden answer from std::multimap! 68559216719872 != 68335982052608
+
+2.19605672\times10^{11}
+2.19605907\times10^{11}
+2.23410033\times10^{11}
+2.31809801\times10^{11}
+2.16829575\times10^{11}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
