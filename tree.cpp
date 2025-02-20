@@ -1,6 +1,7 @@
 #include "tree.h"
 #include <stdio.h>
 #include <algorithm>
+#include <iostream>
 
 // ================== MyNode Implementation ==================
 
@@ -289,6 +290,9 @@ void traverse_queries(MyTree* tree,
 {
     uint64_t ans_sum = 0;
     //uint64_t ans_sum_golden = 0;
+
+    int j = 0;
+
     for (size_t i = tid; i < queries.size(); i += threadcnt) {
         std::tuple<MyTree::MyNode*, uint64_t> q = queries[i];
         MyTree::MyNode* from = std::get<0>(q);
@@ -311,7 +315,10 @@ void traverse_queries(MyTree* tree,
                 }
                 n = tree->Next(n);
             }
+            std::cout << "Current min_dist: " << min_dist << std::endl; // Print min_dist
             ans_sum += min_dist;
+            j ++;
+            if (j == 10) exit(1);
         }
 
     //     auto it = tree->FindGolden(from->key);
