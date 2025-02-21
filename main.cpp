@@ -79,34 +79,34 @@ int main (int argc, char** argv) {
 	printf( "Finished reading the query file. %ld requests.\n", queries.size() );
 	fflush(stdout);
 
-	uint64_t ans_sum = 0;;
-	std::vector<std::thread*> threads;
-	threads.reserve(thread_cnt);
+	// uint64_t ans_sum = 0;;
+	// std::vector<std::thread*> threads;
+	// threads.reserve(thread_cnt);
 
-	std::vector<uint64_t> return_cnts;
-	return_cnts.reserve(thread_cnt);
+	// std::vector<uint64_t> return_cnts;
+	// return_cnts.reserve(thread_cnt);
 
-	start = std::chrono::high_resolution_clock::now();
+	// start = std::chrono::high_resolution_clock::now();
 
-	for ( int i = 0; i < thread_cnt; i++ ) {
-		return_cnts[i] = 0;
-		threads[i] = new std::thread(traverse_queries, tree, queries, i, thread_cnt, &(return_cnts[i]));
-	}
+	// for ( int i = 0; i < thread_cnt; i++ ) {
+	// 	return_cnts[i] = 0;
+	// 	threads[i] = new std::thread(traverse_queries, tree, queries, i, thread_cnt, &(return_cnts[i]));
+	// }
 
-	for ( int i = 0; i < thread_cnt; i++ ) {
-		threads[i]->join();
-		ans_sum += return_cnts[i];
-		//printf( "%lx\n", return_cnts[i] );
-	}
+	// for ( int i = 0; i < thread_cnt; i++ ) {
+	// 	threads[i]->join();
+	// 	ans_sum += return_cnts[i];
+	// 	//printf( "%lx\n", return_cnts[i] );
+	// }
 
 
 
-	now = std::chrono::high_resolution_clock::now();
-	elapsed = std::chrono::duration_cast<std::chrono::duration<double>>(now - start);
+	// now = std::chrono::high_resolution_clock::now();
+	// elapsed = std::chrono::duration_cast<std::chrono::duration<double>>(now - start);
 	
-	printf( "Answer_sum: %ld\n", ans_sum );
-	printf( "Done querying. Elapsed %.06fs\n", elapsed.count() );
-	fflush(stdout);
+	// printf( "Answer_sum: %ld\n", ans_sum );
+	// printf( "Done querying. Elapsed %.06fs\n", elapsed.count() );
+	// fflush(stdout);
 
-	return 0;
+	// return 0;
 }

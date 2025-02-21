@@ -12,96 +12,63 @@
 #include <tuple>
 #include <thread>
 #include <map>
+#include <algorithm>
+
+#define BPT_ORDER 4
 
 class MyTree {
-public:
-    // Forward-declare MyNode so BPlusNode can store pointers to it.
-    class MyNode;
-
-    // Nested B+ tree node structure
-    class BPlusNode {
     public:
-        bool     isLeaf;
-        int      count;         
-        uint64_t keys[4];       
-        // For an internal node, children[i] is another BPlusNode
-        // For a leaf, children[] are not used
-        BPlusNode* children[5]; 
-
-        // For leaf nodes only, we store actual data in records
-        MyNode*   records[4];  
-
-        BPlusNode* next;   // next leaf in the leaf-level linked list
-        BPlusNode* parent; // parent pointer for splits
-
-        // Simple constructor
-        BPlusNode(bool leaf) {
-            isLeaf = leaf;
-            count  = 0;
-            parent = nullptr;
-            next   = nullptr;
-            for(int i=0; i<4; i++){
-                keys[i]      = 0;
-                records[i]   = nullptr;
-                children[i]  = nullptr;
-            }
-            children[4] = nullptr;
-        }
-    };
-
-    // The data object we store in the leaves
-    class MyNode {
-    public:
+    // MyTree::MyNode is the original BST node obj
+    // keep for compatability
+    class MyNode{
+        public:
         MyNode(uint64_t key, void* val, size_t valbytes);
-        // Distance function as before
+        void* val;
+        uint64_t key;
+        size_t valcnt;
         uint32_t Distance(void* val);
 
-        // Key + Value
-        uint64_t key;
-        void*    val;
-        size_t   valcnt;
 
-        // BST-related fields (unused now, but kept for main.cpp compatibility)
-        MyNode*  parent;
-        MyNode*  left;
-        MyNode*  right;
-
-        // B+ bookkeeping: which leaf, and at which index
-        BPlusNode* leaf;
-        int         leafIndex;
+		MyNode* parent = NULL;
+		MyNode* right = NULL;
+		MyNode* left = NULL;
     };
 
-    // Public methods
+
+    class BPlusNode {
+        public:
+        bool isLeaf;
+        BPlusNode* parent;
+        BPlusNode* next;
+        
+        std::vector<uint64_t> keys; // 存储的键值
+        std::vector<BPlusNode*> children; // 内部节点的子指针（仅内部节点使用
+
+        std::vector<void*> values; // 叶子节点存储数据（仅叶子节点使用）
+        std::vector<size_t> valbytes; // 存储每个 values[i] 的字节大小
+
+        BPlusNode(bool leaf = false): isLeaf(leaf) {}
+
+        uint32_t Distance(void* val);
+
+    };
+
+
+
     MyTree();
-    void Insert(MyNode* node);
-    MyNode* Find(uint64_t key);
-    MyNode* Next(MyNode* node);
+    void Insert(MyNode* nn);
 
-    // For "golden" reference checking
-    std::multimap<uint64_t, MyNode*>::iterator FindGolden(uint64_t key);
-    std::multimap<uint64_t, MyNode*>::iterator NextGolden(std::multimap<uint64_t, MyNode*>::iterator it);
-    std::multimap<uint64_t, MyNode*>::iterator GoldenEnd() { return golden.end(); }
+    BPlusNode* root;
+    BPlusNode* FindLeaf(uint64_t key);
+    
+    void InsertIntoLeaf(BPlusNode* leaf, uint64_t key, void* val, size_t valcnt);
 
-private:
-    // Root of the B+ tree
-    BPlusNode* root = nullptr;
+    void SplitChild(BPlusNode* parent, int index, BPlusNode* child);
+    void insertNonFull(BPlusNode* node, uint64_t key);
 
-    // The golden multimap
-    std::multimap<uint64_t, MyNode*> golden;
-
-    // B+ tree private helpers
-    BPlusNode* findLeaf(uint64_t key);
-    void insertInLeaf(BPlusNode* leaf, MyNode* record);
-    void splitLeaf(BPlusNode* leaf);
-    void splitInternal(BPlusNode* internal);
 };
 
-// Same traversal function as before
-void traverse_queries(MyTree* tree,
-                      std::vector<std::tuple<MyTree::MyNode*, uint64_t>> queries,
-                      int tid,
-                      int threadcnt,
-                      uint64_t* ret);
+void traverse_queries();
+
 
 #endif
-
