@@ -65,20 +65,52 @@ void MyTree::Insert(MyNode* node)
 }
 
 // Return the *first* node that exactly matches 'key', or NULL
+// MyTree::MyNode* MyTree::Find(uint64_t key)
+// {
+//     if (!root) return nullptr;
+//     BPlusNode* leaf = findLeaf(key);
+//     if (!leaf) return nullptr;
+
+//     // Linear search in that leaf for the first matching key
+//     for (int i = 0; i < leaf->count; i++) {
+//         if (leaf->records[i] && leaf->records[i]->key == key) {
+//             return leaf->records[i];
+//         }
+//     }
+//     return nullptr;
+// }
+
+
+// new Find() to simulate in-order logic as BST
 MyTree::MyNode* MyTree::Find(uint64_t key)
 {
     if (!root) return nullptr;
     BPlusNode* leaf = findLeaf(key);
     if (!leaf) return nullptr;
 
-    // Linear search in that leaf for the first matching key
+    // 1. Do a normal left-to-right search in this leaf to see if any record has 'key'
+    int found_i = -1;
     for (int i = 0; i < leaf->count; i++) {
-        if (leaf->records[i] && leaf->records[i]->key == key) {
-            return leaf->records[i];
+        if (leaf->records[i]->key == key) {
+            found_i = i;
+            break;
         }
     }
-    return nullptr;
+    if (found_i == -1) {
+        // No match in this leaf
+        return nullptr;
+    }
+
+    // 2. Now move left while previous slots also have the same key.
+    //    This ensures we return the "left-most" duplicate, matching BST logic.
+    while (found_i > 0 && leaf->records[found_i - 1]->key == key) {
+        found_i--;
+    }
+    return leaf->records[found_i];
 }
+
+
+
 
 // Return the next record in ascending key order, or NULL if none
 MyTree::MyNode* MyTree::Next(MyNode* node)
@@ -299,10 +331,20 @@ void traverse_queries(MyTree* tree,
         uint64_t to = std::get<1>(q);
 
         MyTree::MyNode* nn = tree->Find(from->key);
+
+        std::cout << "NO." << j << " key= " << nn->key << " val= " << *(uint64_t*)nn->val << " valcnt= " << nn->valcnt << std::endl;
+        std::cout << "from key= " << from->key << std::endl;
+        std::cout << std::endl;
+        
+        // j ++;
+        // if (j == 100) exit(1);
+
+
         if (!nn) {
             // not found
         } else {
-            uint64_t min_dist = nn->Distance(from->val);
+            // uint64_t min_dist = nn->Distance(from->val);
+            uint64_t min_dist = UINT64_MAX;
             MyTree::MyNode* n = tree->Next(nn);
             while (n) {
                 if (n->key <= to) {
@@ -315,10 +357,10 @@ void traverse_queries(MyTree* tree,
                 }
                 n = tree->Next(n);
             }
-            std::cout << "Current min_dist: " << min_dist << std::endl; // Print min_dist
-            ans_sum += min_dist;
+            std::cout << "No." << j << "<< Current min_dist: " << min_dist << std::endl; // Print min_dist
+            // ans_sum += min_dist;
             j ++;
-            if (j == 10) exit(1);
+            if (j == 100) exit(1);
         }
 
     //     auto it = tree->FindGolden(from->key);
@@ -342,9 +384,6 @@ void traverse_queries(MyTree* tree,
     //     }
     // }
 
-    *ret = ans_sum;
-
-
     // if (ans_sum != ans_sum_golden) {
     //     printf("Results do not match the golden answer from std::multimap! %ld != %ld\n",
     //            ans_sum, ans_sum_golden);
@@ -352,4 +391,6 @@ void traverse_queries(MyTree* tree,
     // printf( "%d/%d -- %lx %lx\n", tid, threadcnt, *ret, ans_sum );
 
     }
+    *ret = ans_sum;
+
 }
