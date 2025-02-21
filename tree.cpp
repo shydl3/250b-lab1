@@ -141,6 +141,7 @@ void MyTree::Insert(MyNode* nn) {
 }
 
 
+int j = 0;
 
 void traverse_queries(MyTree* tree,
     std::vector<std::tuple<MyTree::MyNode*, uint64_t>> queries,
@@ -161,8 +162,16 @@ void traverse_queries(MyTree* tree,
             continue;
         }
         if (!nn->values.empty()) {
-            std::cout << "BPlusNode value[0]" << nn->values[0] << std::endl;
+
+            std::cout << "NO." << j << std::endl;
+
+            // std::cout << "BPnode keys size= " << nn->keys.size() << std::endl;
+            // std::cout << "BPnode values size= " << nn->values.size() << std::endl;
+            // std::cout << std::endl;
+
         }
+        j ++;
+        if (j == 100) exit(0);
     }
     *ret = ans_sum;
 
