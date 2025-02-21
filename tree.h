@@ -27,7 +27,7 @@ class MyTree {
         uint64_t key;
         size_t valcnt;
         uint32_t Distance(void* val);
-
+        MyNode* Find();
 
 		MyNode* parent = NULL;
 		MyNode* right = NULL;
@@ -37,6 +37,7 @@ class MyTree {
 
     class BPlusNode {
         public:
+
         bool isLeaf;
         BPlusNode* parent;
         BPlusNode* next;
@@ -59,16 +60,21 @@ class MyTree {
     void Insert(MyNode* nn);
 
     BPlusNode* root;
+    BPlusNode* Find(uint64_t key);
+
     BPlusNode* FindLeaf(uint64_t key);
     
     void InsertIntoLeaf(BPlusNode* leaf, uint64_t key, void* val, size_t valcnt);
 
     void SplitChild(BPlusNode* parent, int index, BPlusNode* child);
-    void insertNonFull(BPlusNode* node, uint64_t key);
+    void insertNonFull(BPlusNode* node, uint64_t key, void* val);
 
 };
 
-void traverse_queries();
-
+void traverse_queries(MyTree* tree,
+    std::vector<std::tuple<MyTree::MyNode*, uint64_t>> queries,
+    int tid,
+    int threadcnt,
+    uint64_t* ret);
 
 #endif
