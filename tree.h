@@ -104,4 +104,3 @@ void traverse_queries(MyTree* tree,
                       uint64_t* ret);
 
 #endif
-

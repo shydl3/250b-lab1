@@ -42,6 +42,8 @@ MyTree::MyTree()
     root = nullptr;
 }
 
+int k = 0;
+
 // Insert node into both the B+ tree and the "golden" multimap
 void MyTree::Insert(MyNode* node)
 {
@@ -58,6 +60,12 @@ void MyTree::Insert(MyNode* node)
         node->leafIndex = 0;
         return;
     }
+
+    // std::cout <<"NO. " << k << " key= " << node->key << " val=  " << *(uint64_t*)node->val << std::endl;
+    // std:: cout << std::endl;
+    // k ++;
+    // if (k == 100) exit(1);
+
 
     // Otherwise, find the leaf in which to insert
     BPlusNode* leaf = findLeaf(node->key);
@@ -103,9 +111,9 @@ MyTree::MyNode* MyTree::Find(uint64_t key)
 
     // 2. Now move left while previous slots also have the same key.
     //    This ensures we return the "left-most" duplicate, matching BST logic.
-    while (found_i > 0 && leaf->records[found_i - 1]->key == key) {
-        found_i--;
-    }
+    // while (found_i > 0 && leaf->records[found_i - 1]->key == key) {
+    //     found_i--;
+    // }
     return leaf->records[found_i];
 }
 
@@ -162,10 +170,16 @@ MyTree::BPlusNode* MyTree::findLeaf(uint64_t key)
     return cur;
 }
 
+int cnt1 = 0;
+
 // Insert a record into a leaf, splitting if needed
 void MyTree::insertInLeaf(BPlusNode* leaf, MyNode* record)
 {
     uint64_t key = record->key;
+
+    // std::cout << "NO." << cnt1 << " key= " << record->key << " value= " << *(uint64_t*)record->val << std::endl << std::endl;
+    // cnt1 ++;
+    // if (cnt1 == 100) exit(1);
 
     // Insert (key, record) in sorted order
     int i = leaf->count - 1;
@@ -331,10 +345,17 @@ void traverse_queries(MyTree* tree,
         uint64_t to = std::get<1>(q);
 
         MyTree::MyNode* nn = tree->Find(from->key);
+        
+        uint32_t* arr = (uint32_t*)nn->val;
+
+        // for (int k = 0; k <=63; k++) {
+        //     std::cout << "NO. " << k << "value[k]= " << arr[k] << std::endl << std::endl;
+        // }
+        // exit(1);
 
         std::cout << "NO." << j << " key= " << nn->key << " val= " << *(uint64_t*)nn->val << " valcnt= " << nn->valcnt << std::endl;
         std::cout << "from key= " << from->key << std::endl;
-        std::cout << std::endl;
+        // std::cout << std::endl;
         
         // j ++;
         // if (j == 100) exit(1);
@@ -358,6 +379,7 @@ void traverse_queries(MyTree* tree,
                 n = tree->Next(n);
             }
             std::cout << "No." << j << "<< Current min_dist: " << min_dist << std::endl; // Print min_dist
+            std::cout << std::endl;
             // ans_sum += min_dist;
             j ++;
             if (j == 100) exit(1);
